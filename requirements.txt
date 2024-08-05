@@ -1,0 +1,10 @@
+langchain-groq
+langchain-anthropic
+langchain-openai
+langchain-mistralai
+streamlit
+langchain-community
+langchain-core
+langchain
+python-dotenv
+streamlit-ace
