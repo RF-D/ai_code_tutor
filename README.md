@@ -18,4 +18,4 @@ An AI-powered tool to help users learn Python through practice questions, code e
    ```
 3. Install dependencies: `pip install -r requirements.txt`
 4. Set up environment variables (see `.env.example`)
-5. Run the app: `streamlit run app/main.py`
+5. Run the app: `streamlit run main.py`
