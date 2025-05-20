@@ -19,3 +19,9 @@ An AI-powered tool to help users learn Python through practice questions, code e
 3. Install dependencies: `pip install -r requirements.txt`
 4. Set up environment variables (see `.env.example`)
 5. Run the app: `streamlit run main.py`
+
+## Frontend
+
+The project includes a React frontend located in the `frontend/` directory. See
+[`frontend/README.md`](frontend/README.md) for setup and development
+instructions.
