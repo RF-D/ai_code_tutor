@@ -48,7 +48,7 @@ const routes = [
         path: 'shadcn-test',
         element: <ShadcnTestPage />,
         meta: {
-          title: 'Shadcn Test',
+          title: 'Shadcn/UI Test',
           icon: 'palette',
           requiresAuth: false
         }

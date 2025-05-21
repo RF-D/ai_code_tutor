@@ -1,0 +1,130 @@
+/* Import Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import existing theme variables */
+@import './theme.css';
+
+/* Additional Shadcn/UI theme variables */
+@layer base {
+  :root {
+    /* Shadcn/UI base colors - light theme */
+    --background: var(--bg-primary);
+    --foreground: var(--text-primary);
+    
+    --card: var(--bg-secondary);
+    --card-foreground: var(--text-primary);
+    
+    --popover: var(--bg-primary);
+    --popover-foreground: var(--text-primary);
+    
+    --primary: var(--color-primary);
+    --primary-foreground: white;
+    
+    --secondary: var(--color-secondary);
+    --secondary-foreground: white;
+    
+    --muted: var(--bg-tertiary);
+    --muted-foreground: var(--text-tertiary);
+    
+    --accent: var(--bg-tertiary);
+    --accent-foreground: var(--text-primary);
+    
+    --destructive: var(--color-danger);
+    --destructive-foreground: white;
+
+    --border: var(--border-color);
+    --input: var(--border-color);
+    --ring: var(--color-primary);
+    
+    --radius: var(--radius-md);
+  }
+  
+  .dark {
+    /* Shadcn/UI base colors - dark theme */
+    --background: var(--bg-primary);
+    --foreground: var(--text-primary);
+    
+    --card: var(--bg-secondary);
+    --card-foreground: var(--text-primary);
+    
+    --popover: var(--bg-primary);
+    --popover-foreground: var(--text-primary);
+    
+    --primary: var(--color-primary);
+    --primary-foreground: white;
+    
+    --secondary: var(--color-secondary);
+    --secondary-foreground: white;
+    
+    --muted: var(--bg-tertiary);
+    --muted-foreground: var(--text-tertiary);
+    
+    --accent: var(--bg-tertiary);
+    --accent-foreground: var(--text-primary);
+    
+    --destructive: var(--color-danger);
+    --destructive-foreground: white;
+    
+    --border: var(--border-color);
+    --input: var(--border-color);
+    --ring: var(--color-primary-light);
+  }
+}
+
+/* Custom utility classes with Tailwind @apply */
+@layer components {
+  /* Layout Components */
+  .container-app {
+    @apply w-full mx-auto px-4;
+  }
+  
+  /* Card Layouts */
+  .card-shadowed {
+    @apply bg-background-secondary rounded-lg shadow-md border border-border;
+  }
+  
+  /* Button Styles */
+  .btn-primary {
+    @apply bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-white px-4 py-2 rounded-md hover:bg-secondary-dark transition-colors;
+  }
+  
+  /* Split Panel Gutters */
+  .gutter {
+    @apply bg-border hover:bg-primary transition-colors duration-200;
+  }
+  
+  .gutter-horizontal {
+    @apply cursor-col-resize;
+  }
+  
+  .gutter-vertical {
+    @apply cursor-row-resize;
+  }
+  
+  /* Form Elements */
+  .input-standard {
+    @apply px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+  }
+  
+  /* Playground Elements */
+  .playground-panel {
+    @apply h-full overflow-auto bg-background-primary border border-border rounded-md;
+  }
+}
+
+/* Preserve existing browser resets from theme.css */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-feature-settings: "rlig" 1, "calt" 1;
+}

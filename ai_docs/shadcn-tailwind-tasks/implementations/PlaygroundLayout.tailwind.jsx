@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Split from 'react-split';
-import CodePanel from './CodePanel';
-import AssistantPanel from './AssistantPanel';
-import ResultsPanel from './ResultsPanel';
-import QuestionPanel from './QuestionPanel';
-import '../../styles/playground.css';
+import CodePanel from './CodePanel.tailwind.jsx';
+import AssistantPanel from './AssistantPanel.tailwind.jsx';
+import ResultsPanel from './ResultsPanel.tailwind.jsx';
+import QuestionPanel from './QuestionPanel.tailwind.jsx';
 
 /**
  * PlaygroundLayout provides the main interface layout with resizable panels
  * for coding, getting assistance, viewing results, and reading questions.
- * 
- * Updated to place the editor next to the question panel horizontally.
+ * This version uses Tailwind CSS for styling.
  */
 function PlaygroundLayout() {
   // State for panel sizes with default values
@@ -21,7 +19,7 @@ function PlaygroundLayout() {
   
   const [leftHorizontalSizes, setLeftHorizontalSizes] = useState(() => {
     const saved = localStorage.getItem('leftHorizontalSizes');
-    return saved ? JSON.parse(saved) : [40, 60]; // Question/Code default split percentages (horizontal)
+    return saved ? JSON.parse(saved) : [40, 60]; // Question/Code default split percentages
   });
   
   const [rightVerticalSizes, setRightVerticalSizes] = useState(() => {
@@ -64,20 +62,15 @@ function PlaygroundLayout() {
   const [codeOutput, setCodeOutput] = useState('');
   const [isExecuting, setIsExecuting] = useState(false);
   const [executionError, setExecutionError] = useState(null);
-  const [executionTime, setExecutionTime] = useState(null);
 
   const handleCodeExecution = async (code) => {
     setIsExecuting(true);
     setExecutionError(null);
-    setExecutionTime(null);
     
     try {
       // This would be replaced with an actual API call
       const response = await simulateCodeExecution(code);
       setCodeOutput(response.output);
-      if (response.executionTime) {
-        setExecutionTime(`${response.executionTime}ms`);
-      }
     } catch (error) {
       setExecutionError(error.message);
       setCodeOutput('Error executing code. See error message for details.');
@@ -99,7 +92,7 @@ function PlaygroundLayout() {
   };
 
   return (
-    <div className="playground-container">
+    <div className="flex flex-col h-screen w-full overflow-hidden bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
       <Split
         sizes={horizontalSizes}
         minSize={300}
@@ -107,19 +100,21 @@ function PlaygroundLayout() {
         gutterSize={8}
         gutterAlign="center"
         direction="horizontal"
-        className="playground-main"
+        className="flex h-full overflow-hidden"
         onDragEnd={setHorizontalSizes}
+        gutterClassName="bg-slate-200 hover:bg-blue-500 transition-colors duration-200 dark:bg-slate-700 dark:hover:bg-blue-700"
       >
-        {/* Left section: Question + Code Editor - now horizontal */}
-        <div className="left-section">
+        {/* Left section: Question + Code Editor (horizontal layout) */}
+        <div className="flex flex-col overflow-hidden">
           <Split
             sizes={leftHorizontalSizes}
             minSize={isSmallScreen ? 100 : 300}
             expandToMin={false}
             gutterSize={8}
             gutterAlign="center"
-            direction={isSmallScreen ? "vertical" : "horizontal"} {/* Switch to vertical on small screens */}
+            direction={isSmallScreen ? "vertical" : "horizontal"}
             onDragEnd={setLeftHorizontalSizes}
+            gutterClassName="bg-slate-200 hover:bg-blue-500 transition-colors duration-200 dark:bg-slate-700 dark:hover:bg-blue-700"
           >
             <QuestionPanel />
             <CodePanel 
@@ -130,7 +125,7 @@ function PlaygroundLayout() {
         </div>
 
         {/* Right section: Assistant + Results */}
-        <div className="right-section">
+        <div className="flex flex-col overflow-hidden">
           <Split
             sizes={rightVerticalSizes}
             minSize={100}
@@ -139,13 +134,13 @@ function PlaygroundLayout() {
             gutterAlign="center"
             direction="vertical"
             onDragEnd={setRightVerticalSizes}
+            gutterClassName="bg-slate-200 hover:bg-blue-500 transition-colors duration-200 dark:bg-slate-700 dark:hover:bg-blue-700"
           >
             <AssistantPanel />
             <ResultsPanel 
               output={codeOutput} 
               error={executionError}
               isLoading={isExecuting}
-              executionTime={executionTime}
             />
           </Split>
         </div>

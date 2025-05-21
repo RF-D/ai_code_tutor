@@ -1,9 +1,94 @@
-import React from 'react';
+import * as React from "react";
+import { cva } from "class-variance-authority";
 import PropTypes from 'prop-types';
-import styles from '../../styles/components/Button.module.css';
+
+import { cn } from "../../lib/utils";
+
+/**
+ * Button component variants using class-variance-authority
+ * Combines Shadcn/UI styling with our app's existing button API
+ */
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        primary: "bg-primary text-primary-foreground hover:bg-primary-dark",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary-dark",
+        success: "bg-success text-white hover:bg-success/90",
+        danger: "bg-danger text-white hover:bg-danger/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        text: "bg-transparent underline-offset-4 hover:bg-muted/20",
+      },
+      size: {
+        sm: "h-8 px-2 py-1 text-xs",
+        md: "h-10 px-4 py-2 text-sm",
+        lg: "h-12 px-6 py-3 text-base",
+      },
+      buttonStyle: {
+        default: "",
+        outline: "bg-transparent border",
+        text: "bg-transparent border-transparent",
+      },
+      fullWidth: {
+        true: "w-full",
+        false: "",
+      },
+    },
+    compoundVariants: [
+      {
+        variant: "primary",
+        buttonStyle: "outline",
+        className: "text-primary border-primary hover:bg-primary/10",
+      },
+      {
+        variant: "secondary",
+        buttonStyle: "outline",
+        className: "text-secondary border-secondary hover:bg-secondary/10",
+      },
+      {
+        variant: "success",
+        buttonStyle: "outline",
+        className: "text-success border-success hover:bg-success/10",
+      },
+      {
+        variant: "danger",
+        buttonStyle: "outline",
+        className: "text-danger border-danger hover:bg-danger/10",
+      },
+      {
+        variant: "primary",
+        buttonStyle: "text",
+        className: "text-primary hover:bg-primary/10",
+      },
+      {
+        variant: "secondary",
+        buttonStyle: "text",
+        className: "text-secondary hover:bg-secondary/10",
+      },
+      {
+        variant: "success",
+        buttonStyle: "text",
+        className: "text-success hover:bg-success/10",
+      },
+      {
+        variant: "danger",
+        buttonStyle: "text",
+        className: "text-danger hover:bg-danger/10",
+      },
+    ],
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+      buttonStyle: "default",
+      fullWidth: false,
+    },
+  }
+);
 
 /**
  * Button component with multiple variants, sizes, and states
+ * This is an adapter between our existing Button API and Shadcn/UI button
  */
 const Button = React.forwardRef(({
   children,
@@ -21,37 +106,41 @@ const Button = React.forwardRef(({
   iconRight,
   ...props
 }, ref) => {
+  // Convert our API to Shadcn/UI style API
+  const buttonStyle = outline ? "outline" : text ? "text" : "default";
   
-  // Build the class list based on props
-  const classes = [
-    styles.button,
-    styles[size],
-    styles[variant],
-    outline ? styles.outline : '',
-    text ? styles.text : '',
-    fullWidth ? styles.fullWidth : '',
-    loading ? styles.loading : '',
-    (iconLeft || iconRight) ? styles.withIcon : '',
-    className
-  ].filter(Boolean).join(' ');
-
+  // Create loading indicator
+  const loadingIndicator = loading ? (
+    <div className="absolute inline-flex h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+  ) : null;
+  
   return (
     <button
       ref={ref}
       type={type}
-      className={classes}
+      className={cn(
+        buttonVariants({ 
+          variant, 
+          size, 
+          buttonStyle, 
+          fullWidth, 
+          className 
+        }),
+        loading && "relative text-transparent",
+      )}
       disabled={disabled || loading}
       onClick={onClick}
       {...props}
     >
-      {iconLeft && <span className={styles.iconLeft}>{iconLeft}</span>}
+      {iconLeft && <span className="mr-2">{iconLeft}</span>}
       {children}
-      {iconRight && <span className={styles.iconRight}>{iconRight}</span>}
+      {iconRight && <span className="ml-2">{iconRight}</span>}
+      {loadingIndicator}
     </button>
   );
 });
 
-Button.displayName = 'Button';
+Button.displayName = "Button";
 
 Button.propTypes = {
   /** Button content */
@@ -83,3 +172,4 @@ Button.propTypes = {
 };
 
 export default Button;
+export { buttonVariants };

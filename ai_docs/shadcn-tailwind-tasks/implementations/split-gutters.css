@@ -1,0 +1,35 @@
+/* Custom styles for react-split gutters - to be added to globals.css */
+
+/* Base gutter styles */
+.gutter {
+  @apply bg-slate-200 transition-colors duration-200 dark:bg-slate-700;
+}
+
+.gutter:hover {
+  @apply bg-blue-500 dark:bg-blue-700;
+}
+
+/* Horizontal gutter (separates left-to-right panels) */
+.gutter.gutter-horizontal {
+  @apply cursor-col-resize w-2;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+/* Vertical gutter (separates top-to-bottom panels) */
+.gutter.gutter-vertical {
+  @apply cursor-row-resize h-2;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  /* Adjust gutter sizes for mobile */
+  .gutter.gutter-horizontal,
+  .gutter.gutter-vertical {
+    @apply w-1.5 h-1.5;
+  }
+}

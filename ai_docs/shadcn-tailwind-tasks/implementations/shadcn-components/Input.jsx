@@ -1,11 +1,11 @@
-import * as React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
-
-import { cn } from "../../lib/utils";
+import { Input as ShadcnInput } from "@/components/ui/input"; // This path assumes shadcn components are installed in the @/components/ui directory
+import { Label } from "@/components/ui/label"; // You'll need to add the Label component with: npx shadcn-ui@latest add label
+import { cn } from "@/lib/utils"; // This is a utility function provided by shadcn for class name merging
 
 /**
- * Input component using Tailwind CSS for styling
- * Maintains the API of the original Input component
+ * Input component integrating shadcn/ui while maintaining the original API
  */
 const Input = React.forwardRef(({
   id,
@@ -28,57 +28,55 @@ const Input = React.forwardRef(({
   className = '',
   ...props
 }, ref) => {
+  
   // Generate a unique ID if not provided
   const inputId = id || `input-${name}-${Math.random().toString(36).substr(2, 9)}`;
 
-  // Map size to Tailwind classes
+  // Map our sizes to tailwind classes
   const sizeClasses = {
-    sm: "h-8 px-2 py-1 text-xs",
-    md: "h-10 px-3 py-2 text-sm",
-    lg: "h-12 px-4 py-3 text-base",
+    sm: "h-8 text-sm",
+    md: "h-10",
+    lg: "h-12 text-lg",
   };
 
-  // Map status to Tailwind classes
-  const statusClasses = error 
-    ? "border-danger focus:border-danger focus:ring-danger/30" 
-    : success
-      ? "border-success focus:border-success focus:ring-success/30"
-      : "border-input focus:border-primary focus:ring-primary/30";
-
-  // Base input styling with Tailwind
-  const inputClasses = cn(
-    "flex w-full rounded-md border bg-background text-text-primary",
-    "focus:outline-none focus:ring-2 focus:ring-offset-0",
-    "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-muted",
-    sizeClasses[size],
-    statusClasses,
-    iconLeft && "pl-9",
-    iconRight && "pr-9",
+  // Build the wrapper and input classes
+  const wrapperClasses = cn(
+    "space-y-2",
     className
   );
 
+  const inputClasses = cn(
+    sizeClasses[size] || sizeClasses.md,
+    error && "border-destructive",
+    success && "border-success",
+    (iconLeft || iconRight) && "pl-10", // Add padding for icon
+    className
+  );
+
+  const helperTextClasses = cn(
+    "text-sm mt-1",
+    error ? "text-destructive" : "text-muted-foreground"
+  );
+
   return (
-    <div className="w-full mb-4">
+    <div className={wrapperClasses}>
       {label && (
-        <label 
-          className={cn(
-            "block mb-1 text-sm font-medium",
-            error ? "text-danger" : success ? "text-success" : "text-text-secondary"
-          )} 
+        <Label 
           htmlFor={inputId}
+          className={cn(required && "after:content-['*'] after:ml-0.5 after:text-destructive")}
         >
-          {label} {required && <span className="text-danger">*</span>}
-        </label>
+          {label}
+        </Label>
       )}
       
       <div className="relative">
         {iconLeft && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             {iconLeft}
           </div>
         )}
         
-        <input
+        <ShadcnInput
           ref={ref}
           id={inputId}
           name={name}
@@ -97,28 +95,25 @@ const Input = React.forwardRef(({
         />
         
         {iconRight && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-text-tertiary">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             {iconRight}
           </div>
         )}
       </div>
       
       {helperText && (
-        <div 
+        <p 
           id={`${inputId}-helper`}
-          className={cn(
-            "mt-1 text-xs",
-            error ? "text-danger" : success ? "text-success" : "text-text-tertiary"
-          )}
+          className={helperTextClasses}
         >
           {helperText}
-        </div>
+        </p>
       )}
     </div>
   );
 });
 
-Input.displayName = "Input";
+Input.displayName = 'Input';
 
 Input.propTypes = {
   /** Input id - will be auto-generated if not provided */
