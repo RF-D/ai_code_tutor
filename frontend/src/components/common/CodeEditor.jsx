@@ -58,6 +58,42 @@ function CodeEditor({
     setIsDarkMode(prev => !prev);
   }, []);
 
+  // Handle code formatting
+  const handleFormat = useCallback(() => {
+    if (editorRef.current) {
+      editorRef.current.getAction('editor.action.formatDocument').run();
+    }
+  }, []);
+
+  // Handle fullscreen toggle
+  const handleToggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => !prev);
+  }, []);
+
+  // Update error decorations in the editor
+  // Memoize the error decoration function for better performance
+  const updateErrorDecorations = useCallback((editor, monaco, markers) => {
+    if (!editor || !monaco) return;
+    
+    // Convert markers to Monaco format
+    const modelMarkers = markers.map(marker => ({
+      startLineNumber: marker.line || 1,
+      startColumn: marker.column || 1,
+      endLineNumber: marker.endLine || marker.line || 1,
+      endColumn: marker.endColumn || marker.column || 1000,
+      message: marker.message || 'Error',
+      severity: marker.severity === 'warning' 
+        ? monaco.MarkerSeverity.Warning 
+        : monaco.MarkerSeverity.Error
+    }));
+    
+    // Set markers on the model
+    const model = editor.getModel();
+    if (model) {
+      monaco.editor.setModelMarkers(model, 'owner', modelMarkers);
+    }
+  }, []);
+
   // Set up editor when Monaco is loaded
   // Using useCallback with an empty dependency array for stable mount handler
 const handleEditorDidMount = useCallback((editor, monaco) => {
@@ -99,7 +135,7 @@ const handleEditorDidMount = useCallback((editor, monaco) => {
     editor.onDidBlurEditorText(() => {
       // You could save code automatically on blur
     });
-  }, [isDarkMode, onRun, markers]);
+  }, [isDarkMode, onRun, markers, handleFormat, handleToggleFullscreen, updateErrorDecorations]);
 
   // Update theme when it changes
   useEffect(() => {
@@ -115,48 +151,12 @@ const handleEditorDidMount = useCallback((editor, monaco) => {
     }
   }, [markers, updateErrorDecorations]);
 
-  // Handle code formatting
-  const handleFormat = useCallback(() => {
-    if (editorRef.current) {
-      editorRef.current.getAction('editor.action.formatDocument').run();
-    }
-  }, []);
-
   // Handle code execution
   const handleRunCode = useCallback(() => {
     if (onRun && editorRef.current) {
       onRun(editorRef.current.getValue());
     }
   }, [onRun]);
-
-  // Handle fullscreen toggle
-  const handleToggleFullscreen = useCallback(() => {
-    setIsFullscreen(prev => !prev);
-  }, []);
-
-  // Update error decorations in the editor
-  // Memoize the error decoration function for better performance
-  const updateErrorDecorations = useCallback((editor, monaco, markers) => {
-    if (!editor || !monaco) return;
-    
-    // Convert markers to Monaco format
-    const modelMarkers = markers.map(marker => ({
-      startLineNumber: marker.line || 1,
-      startColumn: marker.column || 1,
-      endLineNumber: marker.endLine || marker.line || 1,
-      endColumn: marker.endColumn || marker.column || 1000,
-      message: marker.message || 'Error',
-      severity: marker.severity === 'warning' 
-        ? monaco.MarkerSeverity.Warning 
-        : monaco.MarkerSeverity.Error
-    }));
-    
-    // Set markers on the model
-    const model = editor.getModel();
-    if (model) {
-      monaco.editor.setModelMarkers(model, 'owner', modelMarkers);
-    }
-  }, []);
   
   // Handle editor value changes (debounced)
   // Stable debounced callback with configurable delay
