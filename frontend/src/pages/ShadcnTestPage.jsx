@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Button from '../components/ui/button';
-import Input from '../components/ui/input';
-import Card from '../components/ui/card';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import Card from '../components/ui/Card';
 import { FiSettings, FiArrowRight, FiSearch, FiMail, FiLock, FiCheck, FiAlertCircle, FiCode, FiBox, FiCpu } from 'react-icons/fi';
 
 /**
