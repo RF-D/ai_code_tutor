@@ -1,3 +1,4 @@
 .env
 *.log
 utils/__pycache__
+CLAUDE.md
