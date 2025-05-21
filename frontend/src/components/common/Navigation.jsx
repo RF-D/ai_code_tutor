@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { FaLaptopCode, FaQuestionCircle, FaCog, FaHome } from 'react-icons/fa';
 import { getNavigationRoutes } from '../../routes';
 import LanguageSelector from './LanguageSelector';
 import { useTheme } from '../../context/ThemeContext';
@@ -14,6 +15,13 @@ const Navigation = ({ isMobileOpen, toggleMobileNav }) => {
   const location = useLocation();
   const { theme, toggleTheme, isDarkMode } = useTheme();
   const { below, above, orientation, breakpoint } = useResponsive();
+
+  const iconMap = {
+    code: <FaLaptopCode />,
+    question: <FaQuestionCircle />,
+    settings: <FaCog />,
+    home: <FaHome />
+  };
   
   // Determine if we should use compact view on mobile
   const useCompactView = below('md');
@@ -105,11 +113,11 @@ const Navigation = ({ isMobileOpen, toggleMobileNav }) => {
                 onClick={useCompactView ? toggleMobileNav : undefined}
               >
                 <span className="mr-2 text-lg flex items-center justify-center w-5" aria-hidden="true">
-                  {route.meta.icon || (
-                    route.path === '/' ? '🏠' : 
-                    route.path.includes('playground') ? '💻' : 
-                    route.path.includes('questions') ? '📝' : 
-                    route.path.includes('settings') ? '⚙️' : '📄'
+                  {iconMap[route.meta.icon] || (
+                    route.path === '/' ? <FaHome /> :
+                    route.path.includes('playground') ? <FaLaptopCode /> :
+                    route.path.includes('questions') ? <FaQuestionCircle /> :
+                    route.path.includes('settings') ? <FaCog /> : '📄'
                   )}
                 </span>
                 <span className="flex-1 truncate">{route.meta.title}</span>
