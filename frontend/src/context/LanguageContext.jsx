@@ -93,6 +93,12 @@ export function LanguageProvider({ children }) {
     return languagePreferences[currentLanguage.id] || currentLanguage.settings;
   }, [currentLanguage, languagePreferences]);
 
+  // Derive supportedLanguages object
+  const supportedLanguages = availableLanguages.reduce((acc, lang) => {
+    acc[lang.id] = lang.name;
+    return acc;
+  }, {});
+
   // Context value
   const value = {
     // Current language
@@ -100,6 +106,9 @@ export function LanguageProvider({ children }) {
     
     // All available languages
     availableLanguages,
+
+    // Supported languages object for dropdowns
+    supportedLanguages,
     
     // Language preferences for all languages
     languagePreferences,
