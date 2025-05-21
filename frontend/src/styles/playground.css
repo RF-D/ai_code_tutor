@@ -49,6 +49,30 @@
   color: var(--text-color);
 }
 
+/* Simplified grid layout for the playground */
+.playground-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+  height: 100vh;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.playground-grid > .panel {
+  height: 100%;
+  min-height: 0;
+}
+
+@media (max-width: 768px) {
+  .playground-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, auto);
+    height: auto;
+  }
+}
+
 /* Panel shared styles */
 .panel {
   background-color: var(--panel-bg);
