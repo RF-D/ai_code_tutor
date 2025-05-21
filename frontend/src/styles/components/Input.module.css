@@ -1,0 +1,133 @@
+.formControl {
+  position: relative;
+  margin-bottom: var(--spacing-4);
+  width: 100%;
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--spacing-1);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size-md);
+  font-weight: 400;
+  line-height: 1.5;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  background-clip: padding-box;
+  border: 1px solid var(--border-color-dark);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-normal) ease-in-out, 
+              box-shadow var(--transition-normal) ease-in-out;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+.input:disabled,
+.input[readonly] {
+  background-color: var(--bg-tertiary);
+  opacity: 1;
+}
+
+/* Input sizes */
+.sm {
+  padding: 0.25rem 0.5rem;
+  font-size: var(--font-size-sm);
+}
+
+.md {
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size-md);
+}
+
+.lg {
+  padding: 0.75rem 1rem;
+  font-size: var(--font-size-lg);
+}
+
+/* Helper text styles */
+.helperText {
+  margin-top: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+/* Error state */
+.error .input {
+  border-color: var(--color-danger);
+}
+
+.error .input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(var(--color-danger-rgb), 0.25);
+}
+
+.error .helperText,
+.error .label {
+  color: var(--color-danger);
+}
+
+/* Success state */
+.success .input {
+  border-color: var(--color-success);
+}
+
+.success .input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(var(--color-success-rgb), 0.25);
+}
+
+.success .helperText,
+.success .label {
+  color: var(--color-success);
+}
+
+/* With icon */
+.withIconLeft .input {
+  padding-left: 2.5rem;
+}
+
+.withIconRight .input {
+  padding-right: 2.5rem;
+}
+
+.iconLeft,
+.iconRight {
+  position: absolute;
+  top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 2rem);
+  width: 2.5rem;
+  color: var(--text-tertiary);
+  z-index: 5;
+}
+
+.iconLeft {
+  left: 0;
+}
+
+.iconRight {
+  right: 0;
+}
+
+/* With label and with icon adjustments */
+.withLabel .iconLeft,
+.withLabel .iconRight {
+  top: calc(1.5rem + var(--font-size-sm));
+}

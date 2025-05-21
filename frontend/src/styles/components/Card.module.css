@@ -1,0 +1,136 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow var(--transition-normal), 
+              transform var(--transition-normal),
+              border-color var(--transition-normal);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Card variants */
+.flat {
+  box-shadow: none;
+}
+
+.elevated {
+  box-shadow: var(--shadow-md);
+}
+
+.elevated:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.interactive {
+  cursor: pointer;
+}
+
+.interactive:hover {
+  transform: translateY(-3px);
+}
+
+/* Card sections */
+.header {
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.body {
+  flex: 1 1 auto;
+  padding: var(--spacing-4);
+}
+
+.footer {
+  padding: var(--spacing-4);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Card sizes */
+.sm .header {
+  padding: var(--spacing-2);
+}
+
+.sm .body {
+  padding: var(--spacing-2);
+}
+
+.sm .footer {
+  padding: var(--spacing-2);
+}
+
+.lg .header {
+  padding: var(--spacing-5);
+}
+
+.lg .body {
+  padding: var(--spacing-5);
+}
+
+.lg .footer {
+  padding: var(--spacing-5);
+}
+
+/* Card with image */
+.imgTop img {
+  width: 100%;
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.imgBottom img {
+  width: 100%;
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+.imgOverlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: var(--spacing-4);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+/* Card title and text */
+.title {
+  margin-top: 0;
+  margin-bottom: var(--spacing-2);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  margin-top: 0;
+  margin-bottom: var(--spacing-4);
+  font-size: var(--font-size-md);
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.text {
+  margin-top: 0;
+  margin-bottom: var(--spacing-3);
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+}
+
+.text:last-child {
+  margin-bottom: 0;
+}
