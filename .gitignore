@@ -60,7 +60,6 @@ coverage
 
 # Claude/AI related
 CLAUDE.md
-ai_docs/
 
 # Database files
 *.sqlite
