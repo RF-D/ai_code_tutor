@@ -92,4 +92,8 @@ function CodePanel({ onRunCode, isExecuting = false }) {
   );
 }
 
-export default CodePanel;
+// Memoize the CodePanel component to avoid unnecessary re-renders
+export default React.memo(CodePanel, (prevProps, nextProps) => {
+  // Only re-render when execution state changes
+  return prevProps.isExecuting === nextProps.isExecuting;
+});

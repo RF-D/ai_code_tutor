@@ -59,7 +59,8 @@ function CodeEditor({
   }, []);
 
   // Set up editor when Monaco is loaded
-  const handleEditorDidMount = useCallback((editor, monaco) => {
+  // Using useCallback with an empty dependency array for stable mount handler
+const handleEditorDidMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
     
@@ -134,6 +135,7 @@ function CodeEditor({
   }, []);
 
   // Update error decorations in the editor
+  // Memoize the error decoration function for better performance
   const updateErrorDecorations = useCallback((editor, monaco, markers) => {
     if (!editor || !monaco) return;
     
@@ -157,11 +159,18 @@ function CodeEditor({
   }, []);
   
   // Handle editor value changes (debounced)
+  // Stable debounced callback with configurable delay
   const debouncedOnChange = useRef(
     debounce((value) => {
       if (onChange) onChange(value);
     }, 300)
   ).current;
+  
+  // Memoize editor options for better performance
+  const editorOptions = React.useMemo(() => ({
+    ...getEditorOptions(language),
+    ...options
+  }), [language, options]);
   
   const handleEditorChange = useCallback((value) => {
     setEditorValue(value);
@@ -183,10 +192,7 @@ function CodeEditor({
           height="100%"
           language={getMonacoLanguageId(language)}
           value={editorValue}
-          options={{
-            ...getEditorOptions(language),
-            ...options
-          }}
+          options={editorOptions}
           onChange={handleEditorChange}
           onMount={handleEditorDidMount}
           theme={isDarkMode ? 'vs-dark' : 'vs-light'}
@@ -196,4 +202,54 @@ function CodeEditor({
   );
 }
 
-export default CodeEditor;
+// Enhanced memoization with deep equality check
+export default React.memo(CodeEditor, (prevProps, nextProps) => {
+  // Deep comparison for complex objects
+  const areMarkersEqual = () => {
+    if (!prevProps.markers && !nextProps.markers) return true;
+    if (!prevProps.markers || !nextProps.markers) return false;
+    if (prevProps.markers.length !== nextProps.markers.length) return false;
+    
+    // Efficient comparison of marker arrays
+    for (let i = 0; i < prevProps.markers.length; i++) {
+      const prev = prevProps.markers[i];
+      const next = nextProps.markers[i];
+      if (prev.line !== next.line || 
+          prev.column !== next.column || 
+          prev.message !== next.message ||
+          prev.severity !== next.severity) {
+        return false;
+      }
+    }
+    return true;
+  };
+  
+  const areOptionsEqual = () => {
+    // Fast path: reference equality
+    if (prevProps.options === nextProps.options) return true;
+    
+    // Fast path: empty objects
+    const prevKeys = Object.keys(prevProps.options || {});
+    const nextKeys = Object.keys(nextProps.options || {});
+    
+    if (prevKeys.length !== nextKeys.length) return false;
+    
+    // Check each key
+    for (const key of prevKeys) {
+      if (prevProps.options[key] !== nextProps.options[key]) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
+  
+  // Only re-render if these props change
+  return (
+    prevProps.initialValue === nextProps.initialValue &&
+    areMarkersEqual() &&
+    areOptionsEqual() &&
+    prevProps.onRun === nextProps.onRun &&
+    prevProps.onChange === nextProps.onChange
+  );
+});

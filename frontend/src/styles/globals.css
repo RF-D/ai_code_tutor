@@ -1,10 +1,10 @@
+/* Import existing theme variables */
+@import './theme.css';
+
 /* Import Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import existing theme variables */
-@import './theme.css';
 
 /* Additional Shadcn/UI theme variables */
 @layer base {

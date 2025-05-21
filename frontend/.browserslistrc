@@ -1,0 +1,16 @@
+# Browsers that we support
+
+# Modern browsers only (better performance and smaller bundles)
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+not IE 11
+not op_mini all
+not dead
+
+# Alternative settings for wider support (uncomment if needed)
+# > 0.5%
+# last 2 versions
+# not dead
+# not IE 11

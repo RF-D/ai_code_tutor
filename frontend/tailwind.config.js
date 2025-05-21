@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import plugin from 'tailwindcss/plugin';
+
 export default {
   content: [
     "./index.html",
@@ -125,5 +127,22 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Add only the utilities we actually use to reduce bundle size
+    plugin(({ addUtilities }) => {
+      const newUtilities = {
+        '.flex-center': {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        '.flex-between': {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        },
+      };
+      addUtilities(newUtilities);
+    }),
+  ]
 }

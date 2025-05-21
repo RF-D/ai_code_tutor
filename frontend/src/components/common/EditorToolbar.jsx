@@ -77,4 +77,11 @@ function EditorToolbar({
   );
 }
 
-export default EditorToolbar;
+// Memoize the EditorToolbar to avoid unnecessary re-renders
+export default React.memo(EditorToolbar, (prevProps, nextProps) => {
+  // Only re-render when these props change
+  return (
+    prevProps.isDarkMode === nextProps.isDarkMode &&
+    prevProps.language === nextProps.language
+  );
+});

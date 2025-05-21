@@ -90,7 +90,7 @@ const buttonVariants = cva(
  * Button component with multiple variants, sizes, and states
  * This is an adapter between our existing Button API and Shadcn/UI button
  */
-const Button = React.forwardRef(({
+const Button = React.memo(React.forwardRef(({
   children,
   variant = 'primary',
   size = 'md',
@@ -137,6 +137,17 @@ const Button = React.forwardRef(({
       {iconRight && <span className="ml-2">{iconRight}</span>}
       {loadingIndicator}
     </button>
+  );
+}), (prevProps, nextProps) => {
+  // Only re-render when these props change
+  return (
+    prevProps.variant === nextProps.variant &&
+    prevProps.size === nextProps.size &&
+    prevProps.disabled === nextProps.disabled &&
+    prevProps.loading === nextProps.loading &&
+    prevProps.fullWidth === nextProps.fullWidth &&
+    prevProps.outline === nextProps.outline &&
+    prevProps.text === nextProps.text
   );
 });
 

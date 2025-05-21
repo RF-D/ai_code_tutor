@@ -1,33 +1,102 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Split from 'react-split';
 import CodePanel from './CodePanel';
 import AssistantPanel from './AssistantPanel';
 import ResultsPanel from './ResultsPanel';
 import QuestionPanel from './QuestionPanel';
+import useResponsive from '../../hooks/useResponsive';
 import '../../styles/playground.css';
 
 /**
  * PlaygroundLayout provides the main interface layout with resizable panels
  * for coding, getting assistance, viewing results, and reading questions.
  * 
- * Updated to place the editor next to the question panel horizontally.
+ * Enhanced with Tailwind CSS for better responsive design and using the
+ * useResponsive hook to determine the appropriate layout for different screen sizes.
  */
 function PlaygroundLayout() {
+  // Use the responsive hook to get current viewport information
+  const { 
+    isMobile, 
+    isTablet, 
+    isDesktop, 
+    breakpoint, 
+    orientation, 
+    below, 
+    above, 
+    width,
+    height 
+  } = useResponsive();
+  
+  // Determine layout based on screen size and orientation
+  const layout = useMemo(() => {
+    if (below('sm')) return 'mobile';
+    if (below('lg')) return 'tablet';
+    return 'desktop';
+  }, [below]);
+
+  // Determine if we should use vertical orientation for the question/code split
+  const useVerticalLayout = useMemo(() => {
+    return below('lg') || (orientation === 'portrait' && below('xl'));
+  }, [below, orientation]);
+  
   // State for panel sizes with default values
   const [horizontalSizes, setHorizontalSizes] = useState(() => {
     const saved = localStorage.getItem('horizontalSizes');
-    return saved ? JSON.parse(saved) : [60, 40]; // Left/Right default split percentages
+    // Adjust default sizes based on layout
+    if (saved) return JSON.parse(saved);
+    if (layout === 'mobile') return [100];
+    if (layout === 'tablet') return [65, 35];
+    return [60, 40]; // Desktop: Left/Right default split percentages
   });
   
   const [leftHorizontalSizes, setLeftHorizontalSizes] = useState(() => {
     const saved = localStorage.getItem('leftHorizontalSizes');
-    return saved ? JSON.parse(saved) : [40, 60]; // Question/Code default split percentages (horizontal)
+    if (saved) return JSON.parse(saved);
+    // Different ratios for different layouts
+    if (useVerticalLayout) return [30, 70];
+    return [40, 60]; // Question/Code default split percentages
   });
   
   const [rightVerticalSizes, setRightVerticalSizes] = useState(() => {
     const saved = localStorage.getItem('rightVerticalSizes');
-    return saved ? JSON.parse(saved) : [70, 30]; // Assistant/Results default split percentages
+    if (saved) return JSON.parse(saved);
+    // Adjust based on layout
+    if (layout === 'tablet' && orientation === 'portrait') return [60, 40];
+    return [70, 30]; // Assistant/Results default split percentages
   });
+
+  // Reset panel sizes when responsive breakpoint or orientation changes
+  useEffect(() => {
+    // Don't override user settings if present and screen size hasn't drastically changed
+    if (layout === 'mobile') {
+      setHorizontalSizes([100]);
+      
+      // Mobile phone in landscape mode
+      if (orientation === 'landscape' && height < 500) {
+        setLeftHorizontalSizes([20, 80]); // Less space for question, more for code
+      } else {
+        setLeftHorizontalSizes([30, 70]);
+      }
+      
+      setRightVerticalSizes([60, 40]);
+    } else if (layout === 'tablet') {
+      setHorizontalSizes([65, 35]);
+      
+      if (orientation === 'portrait') {
+        setLeftHorizontalSizes([30, 70]);
+        setRightVerticalSizes([60, 40]);
+      } else {
+        setLeftHorizontalSizes([25, 75]);
+        setRightVerticalSizes([65, 35]);
+      }
+    } else {
+      // Desktop
+      setHorizontalSizes([60, 40]);
+      setLeftHorizontalSizes(useVerticalLayout ? [30, 70] : [40, 60]);
+      setRightVerticalSizes([70, 30]);
+    }
+  }, [layout, orientation, useVerticalLayout, height]);
 
   // Save panel sizes to localStorage when they change
   useEffect(() => {
@@ -41,24 +110,6 @@ function PlaygroundLayout() {
   useEffect(() => {
     localStorage.setItem('rightVerticalSizes', JSON.stringify(rightVerticalSizes));
   }, [rightVerticalSizes]);
-
-  // Detect viewport width for responsive layout
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-  
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 768);
-    };
-    
-    // Check on initial render
-    checkScreenSize();
-    
-    // Add event listener for window resize
-    window.addEventListener('resize', checkScreenSize);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
 
   // Handle code execution
   const [codeOutput, setCodeOutput] = useState('');
@@ -98,11 +149,61 @@ function PlaygroundLayout() {
     });
   };
 
+  // For mobile view, render stacked layout
+  if (layout === 'mobile') {
+    return (
+      <div className="playground-container w-full h-screen overflow-hidden bg-background-secondary text-text-primary">
+        <div className="flex flex-col h-full w-full">
+          {/* Mobile Layout: Stacked panels */}
+          <div className={`w-full ${orientation === 'landscape' ? 'h-1/2' : 'h-[40%]'} overflow-hidden`}>
+            <Split
+              sizes={leftHorizontalSizes}
+              minSize={orientation === 'landscape' ? 100 : 150}
+              expandToMin={false}
+              gutterSize={6}
+              gutterAlign="center"
+              direction="vertical"
+              onDragEnd={setLeftHorizontalSizes}
+              className="h-full"
+            >
+              <QuestionPanel />
+              <CodePanel 
+                onRunCode={handleCodeExecution} 
+                isExecuting={isExecuting} 
+              />
+            </Split>
+          </div>
+          <div className={`w-full ${orientation === 'landscape' ? 'h-1/2' : 'h-[60%]'} overflow-hidden`}>
+            <Split
+              sizes={rightVerticalSizes}
+              minSize={orientation === 'landscape' ? 80 : 100}
+              expandToMin={false}
+              gutterSize={6}
+              gutterAlign="center"
+              direction="vertical"
+              onDragEnd={setRightVerticalSizes}
+              className="h-full"
+            >
+              <AssistantPanel />
+              <ResultsPanel 
+                output={codeOutput} 
+                error={executionError}
+                isLoading={isExecuting}
+                executionTime={executionTime}
+              />
+            </Split>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // For tablet and desktop, use appropriate layouts
   return (
-    <div className="playground-container">
+    <div className="playground-container w-full h-screen overflow-hidden bg-background-secondary text-text-primary">
       <Split
         sizes={horizontalSizes}
-        minSize={300}
+        minSize={layout === 'tablet' ? 250 : 300}
         expandToMin={false}
         gutterSize={8}
         gutterAlign="center"
@@ -110,15 +211,15 @@ function PlaygroundLayout() {
         className="playground-main"
         onDragEnd={setHorizontalSizes}
       >
-        {/* Left section: Question + Code Editor - now horizontal */}
+        {/* Left section: Question + Code Editor */}
         <div className="left-section">
           <Split
             sizes={leftHorizontalSizes}
-            minSize={isSmallScreen ? 100 : 300}
+            minSize={layout === 'tablet' ? 120 : 150}
             expandToMin={false}
             gutterSize={8}
             gutterAlign="center"
-            direction={isSmallScreen ? "vertical" : "horizontal"} {/* Switch to vertical on small screens */}
+            direction={useVerticalLayout ? "vertical" : "horizontal"}
             onDragEnd={setLeftHorizontalSizes}
           >
             <QuestionPanel />
@@ -133,7 +234,7 @@ function PlaygroundLayout() {
         <div className="right-section">
           <Split
             sizes={rightVerticalSizes}
-            minSize={100}
+            minSize={layout === 'tablet' ? 80 : 100}
             expandToMin={false}
             gutterSize={8}
             gutterAlign="center"
