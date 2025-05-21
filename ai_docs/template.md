@@ -29,23 +29,23 @@
 > Ordered from start to finish
 
 1. [First task - what is the first task?]
-```aider
+
 What prompt would you run to complete this task?
 What file do you want to CREATE or UPDATE?
 What function do you want to CREATE or UPDATE?
 What are details you want to add to drive the code changes?
-```
+
 2. [Second task - what is the second task?]
-```aider
+
 What prompt would you run to complete this task?
 What file do you want to CREATE or UPDATE?
 What function do you want to CREATE or UPDATE?
 What are details you want to add to drive the code changes?
-```
+
 3. [Third task - what is the third task?]
-```aider
+
 What prompt would you run to complete this task?
 What file do you want to CREATE or UPDATE?
 What function do you want to CREATE or UPDATE?
 What are details you want to add to drive the code changes?
-```
+

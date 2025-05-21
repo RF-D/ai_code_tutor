@@ -106,3 +106,23 @@ Update App.jsx and Navigation.jsx to:
 - Handle theme transitions smoothly
 - Save and restore theme preferences
 ```
+
+8. Create responsive design custom hook
+```aider
+Create frontend/src/hooks/useResponsive.jsx that:
+- Provides viewport size information
+- Returns breakpoint values aligned with Tailwind CSS
+- Detects screen size changes in real-time
+- Exposes useful responsive properties (isMobile, isTablet, isDesktop)
+- Implements efficient resize detection with debouncing
+```
+
+9. Enhance PlaygroundLayout with responsive features
+```aider
+Update frontend/src/components/CodePlayground/PlaygroundLayout.jsx to:
+- Use the useResponsive hook for adaptive layouts
+- Implement different layouts for mobile, tablet, and desktop views
+- Adjust split panel behavior based on screen size
+- Save and restore panel size preferences per device type
+- Apply Tailwind CSS classes for responsive styling
+```
