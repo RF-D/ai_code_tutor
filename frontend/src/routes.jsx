@@ -103,7 +103,10 @@ const routes = [
         meta: {
           title: 'Practice Questions',
           icon: 'question',
-          requiresAuth: false
+          requiresAuth: false,
+          // Hide this standalone page from the sidebar now that the
+          // playground includes question functionality
+          hideInNav: true
         }
       },
       {
