@@ -55,7 +55,6 @@ const PageLoader = () => (
 const PlaygroundPage = lazy(() => import(/* webpackChunkName: "playground" */ './pages/PlaygroundPage.jsx'));
 const QuestionsPage = lazy(() => import(/* webpackChunkName: "questions" */ './pages/QuestionsPage.jsx'));
 const SettingsPage = lazy(() => import(/* webpackChunkName: "settings" */ './pages/SettingsPage.jsx'));
-const ShadcnTestPage = lazy(() => import(/* webpackChunkName: "shadcn" */ './pages/ShadcnTestPage.jsx'));
 
 // Prefetch component for preloading important routes
 const Prefetch = ({ children }) => {
@@ -119,21 +118,6 @@ const routes = [
         meta: {
           title: 'Settings',
           icon: 'settings',
-          requiresAuth: false
-        }
-      },
-      {
-        path: 'shadcn-test',
-        element: (
-          <ErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <ShadcnTestPage />
-            </Suspense>
-          </ErrorBoundary>
-        ),
-        meta: {
-          title: 'Shadcn Test',
-          icon: 'palette',
           requiresAuth: false
         }
       },

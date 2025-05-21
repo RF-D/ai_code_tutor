@@ -127,9 +127,10 @@
 
 /* Question panel */
 .question-panel {
-  flex: 0 0 auto;
-  /* Removed height constraint to allow horizontal layout */
+  /* Allow panel to expand with Split sizes */
+  flex: 1 1 auto;
   min-height: 150px;
+  overflow-y: auto;
 }
 
 .question-content {

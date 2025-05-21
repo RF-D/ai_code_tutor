@@ -109,7 +109,6 @@ const Navigation = ({ isMobileOpen, toggleMobileNav }) => {
                     route.path === '/' ? '🏠' : 
                     route.path.includes('playground') ? '💻' : 
                     route.path.includes('questions') ? '📝' : 
-                    route.path.includes('shadcn') ? '🎨' :
                     route.path.includes('settings') ? '⚙️' : '📄'
                   )}
                 </span>
