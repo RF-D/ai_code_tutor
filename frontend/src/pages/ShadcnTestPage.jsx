@@ -237,6 +237,7 @@ function ShadcnTestPage() {
                   success
                   iconRight={<FiCheck />}
                   helperText="This looks good!"
+                  readOnly
                 />
                 <Input
                   name="error"
@@ -245,6 +246,7 @@ function ShadcnTestPage() {
                   error
                   iconRight={<FiAlertCircle />}
                   helperText="Please provide a valid value"
+                  readOnly
                 />
               </div>
             </div>
@@ -257,6 +259,7 @@ function ShadcnTestPage() {
                   label="Disabled Input"
                   value="Can't edit this"
                   disabled
+                  readOnly
                 />
                 <Input
                   name="readonly"
