@@ -18,11 +18,18 @@ function EditorToolbar({
   onToggleTheme,
   onToggleFullscreen,
 }) {
-  const { language, setLanguage, supportedLanguages } = useLanguage();
+  const {
+    currentLanguageId,
+    availableLanguages,
+    changeLanguage,
+  } = useLanguage();
 
-  const handleLanguageChange = useCallback((e) => {
-    setLanguage(e.target.value);
-  }, [setLanguage]);
+  const handleLanguageChange = useCallback(
+    (e) => {
+      changeLanguage(e.target.value);
+    },
+    [changeLanguage]
+  );
 
   return (
     <div className="editor-toolbar">
@@ -45,13 +52,13 @@ function EditorToolbar({
 
       <div className="editor-toolbar-group language-select">
         <select
-          value={language}
+          value={currentLanguageId}
           onChange={handleLanguageChange}
           title="Select Programming Language"
         >
-          {Object.entries(supportedLanguages).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
+          {availableLanguages.map((lang) => (
+            <option key={lang.id} value={lang.id}>
+              {lang.name}
             </option>
           ))}
         </select>
@@ -80,8 +87,5 @@ function EditorToolbar({
 // Memoize the EditorToolbar to avoid unnecessary re-renders
 export default React.memo(EditorToolbar, (prevProps, nextProps) => {
   // Only re-render when these props change
-  return (
-    prevProps.isDarkMode === nextProps.isDarkMode &&
-    prevProps.language === nextProps.language
-  );
+  return prevProps.isDarkMode === nextProps.isDarkMode;
 });
